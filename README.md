@@ -123,9 +123,7 @@ pip install -r requirements.txt
 python app.py
 
 
-Backend runs on:
 
-http://localhost:5000
 
 Frontend
 
@@ -136,9 +134,6 @@ pip install -r requirements.txt
 streamlit run streamlit_app.py
 
 
-Frontend runs on:
-
-http://localhost:8501
 
 6. Dataset
 
