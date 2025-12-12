@@ -1,156 +1,203 @@
 # Leukemia_Detector_And_Predictor_Using_ResNet_Main
 
-This project implements a deep learning–based system for detecting leukemic cells in peripheral blood smear images using a fine-tuned ResNet-50 Convolutional Neural Network (CNN).
-The system performs segmentation, classification, annotation, and prediction confidence analysis, and is deployed using a Flask backend and Streamlit frontend.
+## Automated Blood Cell Classification Using Deep Learning (ResNet–50)
 
-1. Overview
+A lightweight, end-to-end system for detecting and classifying leukemic cells from microscopic blood smear images.
+This project includes:
 
-Acute Lymphoblastic Leukemia (ALL) diagnosis involves identifying abnormal blast cells in a blood smear. Manual examination is time-consuming and subjective, so automated methods support faster screening.
+-Deep learning model (ResNet-50 backbone)
 
-This project builds an automated pipeline that:
+-Automated cell segmentation using OpenCV
 
-Accepts a blood smear image (JPG, PNG, BMP).
+-Flask backend (model inference + preprocessing + segmentation)
 
-Segments out individual cells using classical image processing.
+-Streamlit frontend (user interface + visualization)
 
-Classifies each cell as:
+-Logging of predictions and annotated outputs
 
-Leukemia
+## 1. Project Overview
 
-Normal
+Early detection of leukemia can significantly improve treatment outcomes.
+This system classifies blood cells into:
 
-Draws bounding boxes and produces an annotated output image.
+-Leukemic
 
-Displays prediction probabilities for each detected cell.
+-Normal
 
-The model achieves strong performance on the C-NMC 2019 dataset with a cleaned and balanced subset.
+## The workflow includes:
 
-2. How Classification Works
-2.1 Cell Segmentation
+-Image Upload (JPG/PNG/BMP)
 
-Cells are located using:
+-Automated Nucleus Segmentation
 
-Grayscale conversion
+-Bounding-Box Extraction
 
-Gaussian blurring
+-ResNet-based Classification
 
-Otsu thresholding
+-Probability Scores + Annotated Image Output
 
-Contour detection
+-Prediction Logging for Auditability
 
-Bounding-box extraction
+## 2. How the Model Performs Classification
 
-Each detected cell is cropped and normalized before being passed to the CNN.
+The model doesn’t look at the entire image at once. Instead, it:
 
-2.2 Deep Learning Model (ResNet-50)
+--Segments the nucleus or dominant WBC region
+--Using thresholding + contour detection.
 
-The model uses ResNet-50, a deep residual neural network pre-trained on ImageNet, then fine-tuned on labeled leukemia cell images.
+--Extracts the region of interest (ROI)
+--This focuses the model on the actual cell, not the background.
 
-The network learns discriminative patterns such as:
+--Resizes and normalizes the ROI
+  (224×224, scaled between 0–1)
 
-Nuclear shape: Leukemic blasts often have a larger, irregular nucleus.
+--Uses a fine-tuned ResNet-50 to classify the cell.
 
-Chromatin texture: Leukemic cells show finer, more diffused chromatin.
+### What ResNet Learns in Leukemia vs Normal Cells
 
-Nucleus-to-cytoplasm ratio: Leukemic cells typically have a higher ratio.
+#### The model focuses on:
 
-Cytoplasmic staining: Variations in color intensity correlate with malignancy.
+-Feature	Leukemic Cells	Normal Cells
+-Nucleus Shape	Often irregular, larger, more variable	More uniform and rounded
+-Chromatin Texture	Dense, clumped	Smooth and consistent
+-Color/Staining Pattern	Darker nucleus, uneven staining	Evenly stained
+-Cell Boundary	May appear distorted	Clear, defined boundary
 
-Cell boundary morphology: Blast cells usually have smoother contours.
+### ResNet automatically extracts multi-level features from these patterns across 50 layers.
 
-The model does not “see” medical meaning directly, but learns statistical image features representing these characteristics through convolutional filters.
+## 3. Performance Metrics
+#### Classification Report (Test Set)
+#### Class	Precision	Recall	F1-Score	Support
+#### Leukemia	0.83	0.90	0.87	1092
+#### Normal	0.74	0.61	0.67	509
+#### Accuracy			0.81	1601
+## 4. Interpreting These Results
 
-2.3 Final Classification
+#### The model is highly sensitive to leukemia cells (recall 0.90).
+#### Meaning: If a cell is leukemic, there is a 90% chance the model will catch it.
 
-For each cropped cell patch, the model outputs:
+#### Normal cells have lower recall (0.61), meaning:
+#### Some normal cells are misclassified as leukemic.
 
-probability_leukemia
-probability_normal
+### This is common when:
 
+#### The dataset is imbalanced (more leukemia cells than normal)
 
-The larger probability determines the final predicted label.
+#### Normal cell features vary mildly across labs and staining methods
 
-3. System Architecture
-Backend (Flask)
+#### Still, 81% overall accuracy indicates the model generalizes reasonably well.
 
-Loads the trained .keras model.
+## 5. Important Note on Dataset & Hardware Limitations
 
-Performs segmentation, preprocessing, prediction.
+### This project was built under:
 
-Generates annotated images with bounding boxes.
+#### Dataset Limitations.
 
-Returns structured JSON responses to the frontend.
+#### Limited number of normal cell samples.
 
-Logs predictions (optional) into CSV for analysis.
+#### Some samples had inconsistent staining / imaging quality.
 
-Frontend (Streamlit)
+#### No professionally annotated bounding boxes.
 
-Upload interface supporting up to 5 images.
+#### All segmentation was hand-designed (not a learned segmentation model)
 
-Displays segmented crops and model predictions.
+#### These factors naturally limit the maximum achievable accuracy.
 
-Shows annotated output images with bounding boxes.
+### Device Limitations:
 
-Presents class probabilities and prediction summaries.
+#### The model was trained on limited hardware, restricting:
 
-4. Folder Structure
-Leukemia_Detector_And_Predictor_Using_ResNet_Main/
+#### Total training time.
+
+#### Batch size.
+
+#### Ability to use more complex architectures.
+
+#### Ability to perform extensive hyperparameter tuning.
+
+#### Ability to train with large augmentations.
+
+## Future Improvements
+
+-With:
+
+--Larger balanced datasets
+
+--Better quality microscopic images
+
+--Modern architectures (EfficientNet-V2, ViT, ConvNeXt)
+
+### --GPU access for deeper fine-tuning
+
+--Learned segmentation models (U-Net, Mask R-CNN)
+
+--Accuracy can be pushed well above 90%.
+
+### This project lays the foundation — the system is fully functional and can grow as better data becomes available.
+
+## 6. System Architecture
+### User → Streamlit UI → Flask Backend → Segmentation → ResNet Model → Prediction → UI Visualization
+
+## Frontend (Streamlit)
+
+--Upload up to 5 images
+
+## Displays:
+
+--Annotated images
+
+--Cropped cells
+
+--Prediction labels
+
+--Probability scores
+
+--Backend (Flask)
+
+--Accepts images
+
+--Performs segmentation + preprocessing
+
+--Runs inference
+
+## Saves:
+
+--Annotated outputs
+
+--Cropped cells
+
+## CSV logs
+
+### 7. How to Run
+#### Backend
+--cd backend
+--pip install -r requirements.txt
+--python app.py
+
+#### Frontend
+--cd frontend
+--pip install -r requirements.txt
+--streamlit run streamlit_app.py
+
+```8. Folder Structure
+project/
 │
 ├── LDwebapp/
 │   ├── backend/
 │   │   ├── app.py
-│   │   ├── leukemia_model.keras (not stored on GitHub)
+│   │   ├── leukemia_model.keras
 │   │   ├── utils.py
-│   │   └── requirements.txt
+│   │   ├── requirements.txt
+│   │   └── static/saved/
 │   │
 │   └── frontend/
 │       ├── streamlit_app.py
 │       ├── sample_input.jpg
 │       └── requirements.txt
 │
-├── leukemia/                # Training notebooks, dataset setup
-├── .gitattributes           # Git LFS settings
-├── README.md
-└── ...
+└── README.md```
 
+# 9. Disclaimer
 
-Model files are intentionally excluded or kept in Git LFS due to GitHub size limitations.
-
-5. How to Run Locally
-Backend
-cd LDwebapp/backend
-pip install -r requirements.txt
-python app.py
-
-
-
-
-Frontend
-
-In a new terminal:
-
-cd LDwebapp/frontend
-pip install -r requirements.txt
-streamlit run streamlit_app.py
-
-
-
-6. Dataset
-
-This work is based on the C-NMC 2019 dataset for ALL cell classification.
-Images were cleaned, relabeled where necessary, and split into train/validation/test sets.
-
-7. Future Improvements
-
-Use a learned segmentation model (U-Net / Mask R-CNN).
-
-Implement multi-class classification (e.g., mature lymphocyte vs. blast).
-
-Deploy as a standalone web application with cloud storage.
-
-Integrate Grad-CAM to show what regions influence predictions.
-
-8. Disclaimer
-
-This tool is intended for educational and research purposes only.
-It is not a clinical diagnostic device and should not replace professional medical evaluation.
+# This tool is created strictly for educational and research purposes.
+# It is NOT a clinical diagnostic tool and should not be used as a medical decision-making system.
