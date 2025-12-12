@@ -179,23 +179,28 @@ The model doesn’t look at the entire image at once. Instead, it:
 --pip install -r requirements.txt
 --streamlit run streamlit_app.py
 
-```8. Folder Structure```
-```project/```
-```│```
-```├── LDwebapp/```
-```│   ├── backend/```
-```│   │   ├── app.py```
-```    │   ├── leukemia_model.keras```
-```│   │   ├── utils.py```
-```│   │   ├── requirements.txt```
-```│   │   └── static/saved/```
-```│   │```
-```│   └── frontend/```
-```│       ├── streamlit_app.py```
-```│       ├── sample_input.jpg```
-```│       └── requirements.txt```
-```│```
-```└── README.md ```
+## 8. Folder Structure
+
+```
+project/
+│
+├── LDwebapp/
+│   ├── backend/
+│   │   ├── app.py
+│   │   ├── leukemia_model.keras
+│   │   ├── utils.py
+│   │   ├── requirements.txt
+│   │   └── static/
+│   │       └── saved/
+│   │
+│   └── frontend/
+│       ├── streamlit_app.py
+│       ├── sample_input.jpg
+│       └── requirements.txt
+│
+└── README.md
+```
+
 
 # 9. Disclaimer
 
