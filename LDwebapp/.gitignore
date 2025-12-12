@@ -1,0 +1,25 @@
+# Python cache
+__pycache__/
+
+# VS Code settings
+.vscode/
+
+# Virtual environment
+venv/
+env/
+
+# Streamlit cache
+.streamlit/
+
+# MODEL FILES (EXACT FILE NAMES)
+LEUKEMIA_ResNet/best_model_finetuned.keras
+LEUKEMIA_ResNet/best_model.h5
+LEUKEMIA_ResNet/leukemia_model_backup.keras
+LEUKEMIA_ResNet/resnet50_leukemia_finetuned.keras
+LEUKEMIA_ResNet/resnet50_leukemia_stage1.h5
+
+LDwebapp/backend/leukemia_model.keras
+
+# System files
+.DS_Store
+Thumbs.db
