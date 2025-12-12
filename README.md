@@ -179,7 +179,7 @@ The model doesn’t look at the entire image at once. Instead, it:
 --pip install -r requirements.txt
 --streamlit run streamlit_app.py
 
-```8. Folder Structure
+```8. Folder Structure```
 project/
 │
 ├── LDwebapp/
@@ -195,7 +195,7 @@ project/
 │       ├── sample_input.jpg
 │       └── requirements.txt
 │
-└── README.md```
+└── README.md  `
 
 # 9. Disclaimer
 
